@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appConsumerInfo>
+    <name>IR_Project2017</name>
+    <developper>GG</developper>
+    <description>Twitter Search Engine</description>
+    <year>2016</year>
+
+    <twitterInfo>
+        <owner>GG096210</owner>
+        <ownerID>801461546098577408</ownerID>
+
+        <ConsumerKey_APIKey>NEf33U52frYRHYQlzvBwp4wEz</ConsumerKey_APIKey>
+        <ConsumerSecret_APISecret>4c0SofuSp8RldwV6fxgMATZoPOBSzdmWos39ApsfaX1efzfgUv</ConsumerSecret_APISecret>
+
+        <BearerTokenCredentials>NEf33U52frYRHYQlzvBwp4wEz:4c0SofuSp8RldwV6fxgMATZoPOBSzdmWos39ApsfaX1efzfgUv</BearerTokenCredentials>
+        <Base64EncodedBearerTokenCred>TkVmMzNVNTJmcllSSFlRbHp2QndwNHdFejo0YzBTb2Z1U3A4Umxkd1Y2ZnhnTUFUWm9QT0JTemRtV29zMzlBcHNmYVgxZWZ6ZmdVdg==</Base64EncodedBearerTokenCred>
+
+        <bearerToken>AAAAAAAAAAAAAAAAAAAAAKZcyAAAAAAAOnuY8gZEDgfWINEIaVJsYOmQfCg%3DWHBCTyjQMeJf5SKNi6fYEOR2jP5sJ0UeGi3IbS09E8TkqToBeD</bearerToken>
+    </twitterInfo>
+
+</appConsumerInfo>
