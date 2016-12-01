@@ -7,6 +7,7 @@ package crawler;
 import org.apache.oro.text.regex.Util;
 import org.json.*;
 import utils.HttpReq;
+import utils.Params;
 import utils.Utils;
 
 import java.io.IOException;
@@ -26,13 +27,24 @@ public class Crawler {
     private ArrayList<String> newHashtags;
     private ArrayList<String> hashtagsToRemove;
     private ArrayList<String> keyWords;
+    private int count;
 
-    public Crawler(String seedPath, String badWordsPath, String keyWordsPath) throws IOException {
+//    public Crawler(String seedPath, String badWordsPath, String keyWordsPath) throws IOException {
+//        utils = new Utils();
+//        System.out.println();
+//        Hashtags = utils.readFileFromPath(seedPath);
+//        badWords = utils.readFileFromPath(badWordsPath);
+//        keyWords = utils.readFileFromPath(keyWordsPath);
+//        newHashtags = new ArrayList<String>();
+//        hashtagsToRemove = new ArrayList<String>();
+//    }
+
+    public Crawler(Params p) throws IOException {
         utils = new Utils();
-        System.out.println();
-        Hashtags = utils.readFileFromPath(seedPath);
-        badWords = utils.readFileFromPath(badWordsPath);
-        keyWords = utils.readFileFromPath(keyWordsPath);
+        Hashtags = utils.readFileFromPath(p.seed);
+        badWords = utils.readFileFromPath(p.lists+"/badwords");
+        keyWords = utils.readFileFromPath(p.lists+"/key_words");
+        count = p.numOfTweets;
         newHashtags = new ArrayList<String>();
         hashtagsToRemove = new ArrayList<String>();
 
@@ -44,7 +56,7 @@ public class Crawler {
         ArrayList<String> indexData = new ArrayList<String>();
 
         for (String hashtag: Hashtags) {
-            System.out.println("\nNew Query: "+hashtag);
+            System.out.println("New Query: "+hashtag);
             String url = "https://api.twitter.com/1.1/search/tweets.json?q=%23"+hashtag+"&count=100";
             HttpReq req = new HttpReq("GET", url, token);
 

@@ -98,7 +98,6 @@ public class Utils {
         System.out.println("\tSeed File: " + p.seed);
         System.out.println("\tOther Resources: " + p.lists);
         System.out.println("\tNumber of tweets/req: " + p.numOfTweets);
-
         return p;
     }
 
