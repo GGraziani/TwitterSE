@@ -2,6 +2,6 @@
 <params>
     <DS>./data/data_store</DS>
     <lists>./data/lists</lists>
-    <seed>./data/seedData/hashtags1</seed>
-    <numOfTweets>10</numOfTweets>
+    <seed>./data/seedData/hashtags</seed>
+    <numOfTweets>100</numOfTweets>
 </params>

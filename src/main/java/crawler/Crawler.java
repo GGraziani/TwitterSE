@@ -4,7 +4,6 @@ package crawler;
  * Created by GG on 24.11.16.
  */
 
-import org.apache.oro.text.regex.Util;
 import org.json.*;
 import utils.HttpReq;
 import utils.Params;
@@ -12,10 +11,6 @@ import utils.Utils;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
-
-import static com.sun.tools.javac.jvm.ByteCodes.ret;
-import static java.awt.SystemColor.text;
 
 
 public class Crawler {
@@ -32,18 +27,18 @@ public class Crawler {
 //    public Crawler(String seedPath, String badWordsPath, String keyWordsPath) throws IOException {
 //        utils = new Utils();
 //        System.out.println();
-//        Hashtags = utils.readFileFromPath(seedPath);
-//        badWords = utils.readFileFromPath(badWordsPath);
-//        keyWords = utils.readFileFromPath(keyWordsPath);
+//        Hashtags = utils.readFileToArrayList(seedPath);
+//        badWords = utils.readFileToArrayList(badWordsPath);
+//        keyWords = utils.readFileToArrayList(keyWordsPath);
 //        newHashtags = new ArrayList<String>();
 //        hashtagsToRemove = new ArrayList<String>();
 //    }
 
     public Crawler(Params p) throws IOException {
         utils = new Utils();
-        Hashtags = utils.readFileFromPath(p.seed);
-        badWords = utils.readFileFromPath(p.lists+"/badwords");
-        keyWords = utils.readFileFromPath(p.lists+"/key_words");
+        Hashtags = utils.readFileToArrayList(p.seed);
+        badWords = utils.readFileToArrayList(p.lists+"/badwords");
+        keyWords = utils.readFileToArrayList(p.lists+"/key_words");
         count = p.numOfTweets;
         newHashtags = new ArrayList<String>();
         hashtagsToRemove = new ArrayList<String>();
@@ -54,19 +49,18 @@ public class Crawler {
 
         JSONArray data = new JSONArray();
         ArrayList<String> indexData = new ArrayList<String>();
+        int c=0;
 
         for (String hashtag: Hashtags) {
-            System.out.println("New Query: "+hashtag);
-            String url = "https://api.twitter.com/1.1/search/tweets.json?q=%23"+hashtag+"&count=100";
+            System.out.println("Crawling element "+c+++": "+hashtag);
+            String url = "https://api.twitter.com/1.1/search/tweets.json?q=%23"+hashtag+"&count="+count;
+
             HttpReq req = new HttpReq("GET", url, token);
 
-
             JSONArray tweets = req.reqTweets();
-            System.out.println("n° of tweets: "+tweets.length());
+            System.out.println("\tRetrieved: "+tweets.length());
             normalizeData(tweets, data, indexData, hashtag);
 
-
-            System.out.println("\n"+"--------------------------------------------------------------------------------");
         }
 //        System.out.println(data);
         System.out.println(indexData.size());
@@ -91,7 +85,7 @@ public class Crawler {
 
                         JSONObject obj2 = newObj(tweet.getJSONObject("retweeted_status"));
 
-                        int j = contains(obj2, indexData);
+                        int j = containsField(obj2, indexData);
 //                    System.out.println(j);
                         if( j > - 1){ // avoid duplicates
 //                         modify existing obj with new data
@@ -123,13 +117,20 @@ public class Crawler {
         obj.put("favorite_count", tweet.get("favorite_count"));
         obj.put("retweet_count", tweet.get("retweet_count"));
         obj.put("entities",tweet.getJSONObject("entities"));
+        obj.put("url","https://Twitter.com/"+tweet.getJSONObject("user").get("screen_name").toString()+"/status/"+tweet.get("id_str"));
         if(tweet.has("extended_entities"))
             obj.put("extended_entities",tweet.getJSONObject("extended_entities"));
         obj.put("retweet", isRetweet(tweet));
+//        if(isRetweet(tweet)){
+//            obj.put("id",tweet.getJSONObject())
+//        }
+
+
+
         return obj;
     }
 
-    private int contains(JSONObject tweet, ArrayList<String> indexData){
+    private int containsField(JSONObject tweet, ArrayList<String> indexData){
         return indexData.indexOf(tweet.get("id_str").toString());
     }
 

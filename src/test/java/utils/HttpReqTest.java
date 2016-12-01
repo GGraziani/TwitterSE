@@ -44,6 +44,6 @@ public class HttpReqTest extends TestCase {
         String method = "GET";
         String url = "https://www.nasa.gov/sites/default/files/styles/image_card_4x3_ratio/public/thumbnails/image/pia20645_main.jpg?itok=dLn7SngD";
         HttpReq httpRec = new HttpReq(method, url, new Hashtable<String, String>());
-        httpRec.reqOther();
+        System.out.println(httpRec.reqOther());
     }
 }

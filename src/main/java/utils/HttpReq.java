@@ -59,8 +59,8 @@ public class HttpReq {
 
     private String sendRequest() throws IOException {
         int responseCode = connection.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
+        System.out.println("\tSending request: " + url);
+        System.out.println("\tResponse Code : " + responseCode);
 
         BufferedReader buff = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));

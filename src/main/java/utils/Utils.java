@@ -2,12 +2,14 @@ package utils;
 
 import org.eclipse.jetty.util.IO;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.xml.bind.JAXB;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +28,7 @@ public class Utils {
         // Nothing to do
     }
 
-    public ArrayList<String> readFileFromPath(String path) throws IOException {
+    public ArrayList<String> readFileToArrayList(String path) throws IOException {
         BufferedReader bufReader = new BufferedReader(new FileReader(path));
         ArrayList<String> lines = new ArrayList<String>();
         String line = bufReader.readLine();
@@ -56,7 +58,7 @@ public class Utils {
         return commentstr;
     }
 
-    public void writeToFile(JSONArray array, ArrayList<String> index, String Path) throws IOException {
+    public void writeToDataStore(JSONArray array, ArrayList<String> index, String Path) throws IOException {
 
         FileWriter json = new FileWriter(Path+".json");
         FileWriter indexFile = new FileWriter(Path+".index");
@@ -71,6 +73,18 @@ public class Utils {
             json.close();
             indexFile.close();
         }
+    }
+
+    public String readFileToString(String path) throws IOException {
+        BufferedReader bufReader = new BufferedReader(new FileReader(path));
+        String str = "";
+        String line = bufReader.readLine();
+        while (line != null) {
+            str+=line;
+            line = bufReader.readLine();
+        }
+        bufReader.close();
+        return str;
     }
 
     public int getNumberOfFiles(String Path){
@@ -97,38 +111,45 @@ public class Utils {
         System.out.println("\tData Store: " + p.DS);
         System.out.println("\tSeed File: " + p.seed);
         System.out.println("\tOther Resources: " + p.lists);
-        System.out.println("\tNumber of tweets/req: " + p.numOfTweets);
+        System.out.println("\tNumber of tweets/req: " + p.numOfTweets+delimiter());
         return p;
     }
 
-//    public ArrayList<String> readFileListFromFile(){
-//        /*
-//            Takes the name of a file (filename), which contains a list of files.
-//            Returns an array of the filenames (to be indexed)
-//         */
-//
-//        String filename = p.fileList;
-//
-//        ArrayList<String> files = new ArrayList<String>();
-//
-//        try {
-//            BufferedReader br = new BufferedReader(new FileReader(filename));
-//            try {
-//                String line = br.readLine();
-//                while (line != null){
-//                    files.add(line);
-//                    line = br.readLine();
-//                }
-//
-//            } finally {
-//                br.close();
-//            }
-//        } catch (Exception e){
-//            System.out.println(" caught a " + e.getClass() +
-//                    "\n with message: " + e.getMessage());
-//        }
-//        return files;
-//    }
+    public String delimiter(){
+        return "\n--------------------------------------------------------------------------------";
+    }
+
+    public void mergeSegments(JSONArray A, ArrayList<String> indexA, JSONArray B, ArrayList<String> indexB){
+
+        for (int i=0; i < B.length(); i++){
+            String curr = indexB.get(i);
+            int x;
+            if((x = indexA.indexOf(curr)) != -1){
+                updateObject(A.getJSONObject(x), B.getJSONObject(i));
+
+            } else{
+                A.put(B.get(i));
+                indexA.add(curr);
+            }
+        }
+    }
+
+    public void updateObject(JSONObject A, JSONObject B){
+        A.put("favorite_count", B.get("favorite_count"));
+        A.put("retweet_count", B.get("retweet_count"));
+    }
+
+
+    public ArrayList<String> indexToArrayOfStrings(String s){
+        s = s.substring(1,s.length()-1);
+
+        String[] array = s.split(", ");
+
+        return new ArrayList<String>(Arrays.asList(array));
+    }
+
+
+
 
 }
 
