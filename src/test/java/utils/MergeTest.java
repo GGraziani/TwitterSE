@@ -46,6 +46,6 @@ public class MergeTest extends TestCase{
         ArrayList<String> indexB = utils.indexToArrayOfStrings(utils.readFileToString(path+"/"+b+".index"));
 
         utils.mergeSegments(A,indexA,B,indexB);
-        utils.writeToDataStore(A,indexA,path+"/"+a);
+//        utils.writeToDataStore(A,indexA,path+"/"+a);
     }
 }

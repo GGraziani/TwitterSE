@@ -39,19 +39,12 @@ public class IndexerApp {
             System.out.println(" caught a " + e.getClass() + "\n with message: " + e.getMessage());
             System.exit(1);
         }
+
         Params p = utils.readParamsFromXMLFile(paramFile);
-        IndexerApp app = new IndexerApp(p);
+        IndexerApp app = new IndexerApp(utils.readParamsFromXMLFile(paramFile));
 
-        CrawlData cd = app.crawler.crawl();
-
-        JSONArray DS = new JSONArray(utils.readFileToString(p.DS+"/ds.json"));
-        ArrayList<String> indexDS = utils.indexToArrayOfStrings(utils.readFileToString(p.DS+"/ds.index"));
-        utils.mergeSegments(DS,indexDS,cd.data,cd.indexData);
-
-        utils.writeToDataStore(DS, indexDS, p.DS+"/ds");
+        CrawlData cd = app.crawler.crawl(); // crawl new data
+        utils.merge(cd); // merge new data with the existing data and overwrite the Data Store
     }
 
-    private void merge(){
-
-    }
 }

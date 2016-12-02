@@ -1,10 +1,12 @@
 package utils;
 
+import crawler.CrawlData;
 import org.eclipse.jetty.util.IO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.xml.bind.JAXB;
+import java.awt.image.VolatileImage;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,9 +22,6 @@ import java.util.regex.Pattern;
 public class Utils {
 
     public Params p;
-
-
-
 
     public Utils(){
         // Nothing to do
@@ -41,21 +40,22 @@ public class Utils {
         return lines;
     }
 
-    public String removeUrl(String commentstr) {
+    public int removeUrl(String commentstr) {
+        String str = commentstr;
         String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
         Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(commentstr);
+        Matcher m = p.matcher(str);
         try{
             int i = 0;
             while (m.find()) {
-                commentstr = commentstr.replaceAll(m.group(i),"").trim();
+                str = str.replaceAll(m.group(i),"").trim();
                 i++;
             }
 
         } catch (Exception e){
-            System.out.println("------->"+commentstr);
+
         }
-        return commentstr;
+        return str.length();
     }
 
     public void writeToDataStore(JSONArray array, ArrayList<String> index, String Path) throws IOException {
@@ -121,22 +121,32 @@ public class Utils {
 
     public void mergeSegments(JSONArray A, ArrayList<String> indexA, JSONArray B, ArrayList<String> indexB){
 
+//        int ot = 0;
         for (int i=0; i < B.length(); i++){
             String curr = indexB.get(i);
             int x;
             if((x = indexA.indexOf(curr)) != -1){
                 updateObject(A.getJSONObject(x), B.getJSONObject(i));
-
             } else{
+                if (B.getJSONObject(i).get("retweet").toString().equals("false")){
+//                    ot++;
+                }
                 A.put(B.get(i));
                 indexA.add(curr);
             }
         }
+//        System.out.println(ot);
     }
 
     public void updateObject(JSONObject A, JSONObject B){
-        A.put("favorite_count", B.get("favorite_count"));
-        A.put("retweet_count", B.get("retweet_count"));
+
+        if( Integer.parseInt(A.get("favorite_count").toString()) < Integer.parseInt(B.get("favorite_count").toString())){
+            A.put("favorite_count", B.get("favorite_count"));
+        }
+
+        if( Integer.parseInt(A.get("retweet_count").toString()) < Integer.parseInt(B.get("retweet_count").toString())){
+            A.put("retweet_count", B.get("retweet_count"));
+        }
     }
 
 
@@ -148,8 +158,15 @@ public class Utils {
         return new ArrayList<String>(Arrays.asList(array));
     }
 
+    public void merge(CrawlData cd) throws IOException {
+        JSONArray DS = new JSONArray(readFileToString(p.DS+"/ds.json"));
+        ArrayList<String> indexDS = indexToArrayOfStrings(readFileToString(p.DS+"/ds.index"));
+        int oldSize = indexDS.size();
+        mergeSegments(DS,indexDS,cd.data,cd.indexData);
+        int actualSize = indexDS.size();
+        System.out.println("Tweets added to DS: "+(actualSize-oldSize));
 
-
-
+        writeToDataStore(DS, indexDS, p.DS+"/ds"); // write the new data
+    }
 }
 

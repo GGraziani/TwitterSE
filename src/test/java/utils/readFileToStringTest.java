@@ -64,6 +64,4 @@ public class readFileToStringTest extends TestCase {
             json.close();
         }
     }
-
-
 }
