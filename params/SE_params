@@ -3,5 +3,7 @@
     <DS>./data/data_store</DS>
     <lists>./data/lists</lists>
     <seed>./data/seedData/hashtags</seed>
+    <indexPath>./index</indexPath>
     <numOfTweets>100</numOfTweets>
+    <appConsumerData>./res/appConsumerData</appConsumerData>
 </params>

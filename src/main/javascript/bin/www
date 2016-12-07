@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+var debug = require('debug')('TwitterSE_server');
+var app = require('../app');
+var dsn = require('dns');
+// console.dir ( ip.address() );
+
+app.set('port', process.env.PORT || 3000);
+app.set('host', process.env.HOST || "0.0.0.0");
+var server = app.listen(app.get('port'), app.get("host"), function() {
+  // debug('Express server listening on:\n' +
+  //     '\t\t'+ app.get("host")+':' + server.address().port+'\n (local)' +
+  //     '\t\t'+ dsn.lookup(require('os').hostname(), function (err, add, fam) {
+  //       console.log('addr: '+add);
+  //     }));
+
+  dsn.lookup(require('os').hostname(), function (err, add, fam) {
+    debug('Express server listening on:\n' +
+        '\t\t'+ app.get("host")+':' + server.address().port+'\t\t(local)\n' +
+        '\t\t'+ add+':'+ server.address().port+'\t(remote)');
+        });
+});

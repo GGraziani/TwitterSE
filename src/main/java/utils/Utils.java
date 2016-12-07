@@ -1,12 +1,10 @@
 package utils;
 
 import crawler.CrawlData;
-import org.eclipse.jetty.util.IO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.xml.bind.JAXB;
-import java.awt.image.VolatileImage;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,6 +59,7 @@ public class Utils {
     public void writeToDataStore(JSONArray array, ArrayList<String> index, String Path) throws IOException {
 
         FileWriter json = new FileWriter(Path+".json");
+//        System.out.println(Path+".json");
         FileWriter indexFile = new FileWriter(Path+".index");
         try {
             json.write(array.toString());
@@ -108,10 +107,10 @@ public class Utils {
             System.exit(1);
         }
 
-        System.out.println("\tData Store: " + p.DS);
-        System.out.println("\tSeed File: " + p.seed);
-        System.out.println("\tOther Resources: " + p.lists);
-        System.out.println("\tNumber of tweets/req: " + p.numOfTweets+delimiter());
+        System.out.println("\t- Data Store: " + p.DS);
+        System.out.println("\t- Seed File: " + p.seed);
+        System.out.println("\t- Other Resources: " + p.lists);
+        System.out.println("\t- Number of tweets/req: " + p.numOfTweets+delimiter());
         return p;
     }
 
@@ -158,15 +157,16 @@ public class Utils {
         return new ArrayList<String>(Arrays.asList(array));
     }
 
-    public void merge(CrawlData cd) throws IOException {
+    public JSONArray merge(CrawlData cd) throws IOException {
         JSONArray DS = new JSONArray(readFileToString(p.DS+"/ds.json"));
         ArrayList<String> indexDS = indexToArrayOfStrings(readFileToString(p.DS+"/ds.index"));
         int oldSize = indexDS.size();
         mergeSegments(DS,indexDS,cd.data,cd.indexData);
         int actualSize = indexDS.size();
-        System.out.println("Tweets added to DS: "+(actualSize-oldSize));
+        System.out.println("Total added to DS: "+(actualSize-oldSize));
 
         writeToDataStore(DS, indexDS, p.DS+"/ds"); // write the new data
+        return DS;
     }
 }
 

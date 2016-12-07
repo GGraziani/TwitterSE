@@ -1,10 +1,7 @@
 package utils;
 
-import org.eclipse.jetty.util.ajax.JSON;
-
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 import org.json.*;
@@ -59,8 +56,7 @@ public class HttpReq {
 
     private String sendRequest() throws IOException {
         int responseCode = connection.getResponseCode();
-        System.out.println("\tSending request: " + url);
-        System.out.println("\tResponse Code : " + responseCode);
+        System.out.println("\t- Sending request to " + url+" ... status code " + responseCode);
 
         BufferedReader buff = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
@@ -86,6 +82,10 @@ public class HttpReq {
 
     public String reqOther() throws IOException {
         return sendRequest();
+    }
+    public JSONObject reqIds() throws IOException {
+        String res = sendRequest();
+        return new JSONObject(res);
     }
 
 }

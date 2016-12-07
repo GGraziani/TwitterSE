@@ -1,12 +1,11 @@
 package utils;
 
+import indexer.LuceneIndexWriterTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.framework.TestCase;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
